@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SLAMD Score Calculator</title>
+<title>SLAMDA Score Calculator</title>
 <style>
     :root {
         --primary-color: #005A9C; /* Medical Blue */
@@ -81,7 +81,6 @@
 
     .calc-row {
         display: flex;
-        justify-content: space-between;
         align-items: center;
         padding: 12px 0;
         border-bottom: 1px solid var(--border-color);
@@ -94,23 +93,26 @@
     .variable-label {
         font-size: 15px;
         font-weight: 500;
-        flex: 1;
+        flex: 0 0 45%; /* Forces label to exactly 45% width */
         padding-right: 15px;
+        box-sizing: border-box;
     }
 
     /* Segmented Control Styling */
     .button-group {
         display: flex;
+        flex: 0 0 55%; /* Forces buttons to align into a strict column */
         background-color: #f1f3f5;
         border-radius: 6px;
         overflow: hidden;
         border: 1px solid #ced4da;
+        box-sizing: border-box;
     }
 
     .btn-option {
         flex: 1;
         padding: 8px 12px;
-        font-size: 14px;
+        font-size: 13px;
         font-weight: 600;
         color: var(--text-muted);
         background: transparent;
@@ -207,8 +209,8 @@
         font-size: 11.5px;
         color: #666;
         margin-top: 12px;
-        font-style: italic;
-        line-height: 1.3;
+        text-align: left;
+        line-height: 1.4;
     }
 
     .reset-btn {
@@ -242,8 +244,13 @@
             flex-direction: column;
             align-items: flex-start;
         }
+        .variable-label {
+            flex: 1 1 auto;
+            width: 100%;
+            margin-bottom: 8px;
+        }
         .button-group {
-            margin-top: 10px;
+            flex: 1 1 auto;
             width: 100%;
         }
     }
@@ -253,8 +260,8 @@
 
 <div class="calculator-wrapper">
     <div class="calc-header">
-        <h2>SLAMD Score</h2>
-        <p><span class="acronym-highlight">SL</span>o<span class="acronym-highlight">A</span>n <span class="acronym-highlight">MD</span> anderson NF risk calculator for adverse outcome</p>
+        <h2>SLAMDA Score</h2>
+        <p><span class="acronym-highlight">SL</span>o<span class="acronym-highlight">A</span>n <span class="acronym-highlight">MD</span> <span class="acronym-highlight">A</span>nderson NF* risk calculator for adverse outcome</p>
     </div>
 
     <div class="calc-body">
@@ -280,7 +287,8 @@
                     <b>ICU admission:</b> 0% - 1.6%
                 </div>
                 <div class="study-note">
-                    Note: These values do not predict individual future outcomes, but rather represent the range of outcomes observed during the validation studies.
+                    <i>Note: These values do not predict individual future outcomes, but rather represent the range of outcomes observed during the validation studies.</i><br><br>
+                    * Neutropenic fever (NF) defined as: A reported or recorded body temperature ≥38°C during the ED presentation and an absolute neutrophil count (ANC) lower than 1000 cells/μL or, if ANC data were not available, a white blood cell count of up to 500 cells/μL upon the ED visit.
                 </div>
             </div>
         </div>
@@ -299,18 +307,19 @@
         { id: "malignancy", label: "Hematologic malignancy", category: "clinical", points: 2 },
         { id: "dbp", label: "DBP < 60 mmHg", category: "clinical", points: 2 },
         { id: "o2", label: "Oxygen saturation ≤ 94%", category: "clinical", points: 4 },
-        { id: "anc", label: "Absolute Neutrophil Count (ANC)", category: "clinical", type: "multi", 
+        
+        // Laboratory
+        { id: "anc", label: "Absolute Neutrophil Count (ANC)", category: "laboratory", type: "multi", 
           options: [
-              { label: "≥ 0.5", points: 0 },
-              { label: "0.1 - 0.5", points: 2 },
-              { label: "< 0.1", points: 3 }
+              { label: "≤ 0.1", points: 3 },
+              { label: "0.11 - 0.49", points: 2 },
+              { label: "≥ 0.5", points: 0 }
           ]
         },
-        // Laboratory
         { id: "sodium", label: "Low Sodium", category: "laboratory", points: 1 },
         { id: "calcium", label: "Low Calcium", category: "laboratory", points: 2 },
         { id: "hemoglobin", label: "Low Hemoglobin", category: "laboratory", points: 1 },
-        { id: "creatinine", label: "Abnormal Creatinine", category: "laboratory", points: 3 },
+        { id: "creatinine", label: "Abnormal Creatinine (low or high)", category: "laboratory", points: 3 },
         { id: "glucose", label: "High Glucose", category: "laboratory", points: 1 },
         { id: "bilirubin", label: "High Total Bilirubin", category: "laboratory", points: 3 }
     ];
@@ -338,7 +347,10 @@
             if (item.type === "multi") {
                 item.options.forEach((opt, index) => {
                     const btn = document.createElement('button');
-                    btn.className = `btn-option ${index === 0 ? 'active' : ''}`;
+                    // Ensure the button corresponding to 0 points is the default active one
+                    btn.className = `btn-option ${opt.points === 0 ? 'active' : ''}`;
+                    // Store the point value to easily reset it later
+                    btn.dataset.points = opt.points;
                     btn.innerText = `${opt.label} ${opt.points > 0 ? '(+' + opt.points + ')' : ''}`;
                     btn.onclick = () => selectOption(item.id, opt.points, btnGroup, btn);
                     btnGroup.appendChild(btn);
@@ -346,11 +358,13 @@
             } else {
                 const btnNo = document.createElement('button');
                 btnNo.className = 'btn-option active';
+                btnNo.dataset.points = "0";
                 btnNo.innerText = 'No';
                 btnNo.onclick = () => selectOption(item.id, 0, btnGroup, btnNo);
 
                 const btnYes = document.createElement('button');
                 btnYes.className = 'btn-option';
+                btnYes.dataset.points = item.points;
                 btnYes.innerText = `Yes (+${item.points})`;
                 btnYes.onclick = () => selectOption(item.id, item.points, btnGroup, btnYes);
 
@@ -396,7 +410,7 @@
         interpretation.style.color = 'var(--text-main)';
 
         const baseTitle = `<span class="risk-stats-title">Observed Adverse Outcomes</span><div class="cohort-data">`;
-        const endNote = `</div><div class="study-note">Note: These values do not predict individual future outcomes, but rather represent the range of outcomes observed during the validation studies.</div>`;
+        const endNote = `</div><div class="study-note"><i>Note: These values do not predict individual future outcomes, but rather represent the range of outcomes observed during the validation studies.</i><br><br>* Neutropenic fever (NF) defined as: A reported or recorded body temperature ≥38°C during the ED presentation and an absolute neutrophil count (ANC) lower than 1000 cells/μL or, if ANC data were not available, a white blood cell count of up to 500 cells/μL upon the ED visit.</div>`;
 
         if (totalScore >= 10) {
             interpretation.innerText = "High Risk (≥ 10 points)";
@@ -437,8 +451,13 @@
         const allGroups = document.querySelectorAll('.button-group');
         allGroups.forEach(group => {
             const buttons = group.querySelectorAll('.btn-option');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            buttons[0].classList.add('active');
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+                // Select the button that corresponds to 0 points as the default
+                if (btn.dataset.points === "0") {
+                    btn.classList.add('active');
+                }
+            });
         });
 
         updateScore();
