@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SLAMD Score Calculator</title>
+<style>
+    :root {
+        --primary-color: #005A9C; /* Medical Blue */
+        --bg-color: #f0f4f8;
+        --card-bg: #ffffff;
+        --border-color: #e1e4e8;
+        --text-main: #24292e;
+        --text-muted: #6a737d;
+        --low-risk: #28a745;
+        --borderline-risk: #f0ad4e;
+        --intermediate-risk: #fd7e14;
+        --high-risk: #dc3545;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-main);
+        margin: 0;
+        padding: 20px 10px;
+        line-height: 1.5;
+    }
+
+    .calculator-wrapper {
+        max-width: 600px;
+        margin: 0 auto;
+        background: var(--card-bg);
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        overflow: hidden;
+    }
+
+    .calc-header {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 24px 20px;
+        text-align: center;
+    }
+
+    .calc-header h2 {
+        margin: 0 0 8px 0;
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+
+    .calc-header p {
+        margin: 0;
+        font-size: 15px;
+        opacity: 0.9;
+        line-height: 1.4;
+        font-weight: 400;
+    }
+
+    .acronym-highlight {
+        font-weight: 700;
+        color: #ffffff;
+        letter-spacing: 0.5px;
+    }
+
+    .calc-body {
+        padding: 20px;
+    }
+
+    .section-title {
+        font-size: 13px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        margin: 20px 0 10px 0;
+        border-bottom: 2px solid var(--border-color);
+        padding-bottom: 5px;
+    }
+
+    .calc-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .calc-row:last-child {
+        border-bottom: none;
+    }
+
+    .variable-label {
+        font-size: 15px;
+        font-weight: 500;
+        flex: 1;
+        padding-right: 15px;
+    }
+
+    /* Segmented Control Styling */
+    .button-group {
+        display: flex;
+        background-color: #f1f3f5;
+        border-radius: 6px;
+        overflow: hidden;
+        border: 1px solid #ced4da;
+    }
+
+    .btn-option {
+        flex: 1;
+        padding: 8px 12px;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-muted);
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+        min-width: 60px;
+        text-align: center;
+    }
+
+    .btn-option:not(:last-child) {
+        border-right: 1px solid #ced4da;
+    }
+
+    .btn-option:hover {
+        background-color: #e9ecef;
+    }
+
+    .btn-option.active {
+        background-color: var(--primary-color);
+        color: white;
+    }
+
+    /* Result Area Styling */
+    .calc-footer {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-top: 1px solid var(--border-color);
+    }
+
+    .result-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 15px;
+        border-radius: 8px;
+        background-color: white;
+        border: 2px solid var(--border-color);
+        margin-bottom: 15px;
+        transition: all 0.3s ease;
+    }
+
+    .score-label {
+        font-size: 14px;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        font-weight: 700;
+    }
+
+    .score-value {
+        font-size: 42px;
+        font-weight: 700;
+        margin: 5px 0;
+        color: var(--text-main);
+    }
+
+    .risk-interpretation {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+
+    .risk-stats {
+        font-size: 14px;
+        color: #444;
+        background-color: #f1f3f5;
+        padding: 12px 20px;
+        border-radius: 6px;
+        text-align: center;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .risk-stats-title {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--text-main);
+        font-size: 13px;
+        text-transform: uppercase;
+        font-weight: 700;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 6px;
+    }
+    
+    .cohort-data {
+        text-align: center;
+        display: inline-block;
+        line-height: 1.6;
+        font-size: 14px;
+    }
+
+    .study-note {
+        font-size: 11.5px;
+        color: #666;
+        margin-top: 12px;
+        font-style: italic;
+        line-height: 1.3;
+    }
+
+    .reset-btn {
+        width: 100%;
+        padding: 10px;
+        background-color: white;
+        border: 1px solid #ced4da;
+        color: var(--text-main);
+        font-size: 15px;
+        font-weight: 600;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .reset-btn:hover {
+        background-color: #e2e6ea;
+    }
+
+    .disclaimer {
+        font-size: 11px;
+        color: #888;
+        text-align: center;
+        margin-top: 20px;
+        line-height: 1.4;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 480px) {
+        .calc-row {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .button-group {
+            margin-top: 10px;
+            width: 100%;
+        }
+    }
+</style>
+</head>
+<body>
+
+<div class="calculator-wrapper">
+    <div class="calc-header">
+        <h2>SLAMD Score</h2>
+        <p><span class="acronym-highlight">SL</span>o<span class="acronym-highlight">A</span>n <span class="acronym-highlight">MD</span> anderson NF risk calculator for adverse outcome</p>
+    </div>
+
+    <div class="calc-body">
+        
+        <div class="section-title">Clinical Variables</div>
+        <div id="clinical-container"></div>
+
+        <div class="section-title">Laboratory Variables</div>
+        <div id="laboratory-container"></div>
+
+    </div>
+
+    <div class="calc-footer">
+        <div class="result-box" id="result-box">
+            <div class="score-label">Total Points</div>
+            <div class="score-value" id="score-value">0</div>
+            <div class="risk-interpretation" id="risk-interpretation">Low Risk</div>
+            
+            <div class="risk-stats" id="risk-stats">
+                <span class="risk-stats-title">Observed Adverse Outcomes</span>
+                <div class="cohort-data">
+                    <b>In-hospital death:</b> 0%<br>
+                    <b>ICU admission:</b> 0% - 1.6%
+                </div>
+                <div class="study-note">
+                    Note: These values do not predict individual future outcomes, but rather represent the range of outcomes observed during the validation studies.
+                </div>
+            </div>
+        </div>
+
+        <button class="reset-btn" onclick="resetCalculator()">Clear Form</button>
+        
+        <div class="disclaimer">
+            <strong>Disclaimer:</strong> This tool is for educational and informational purposes only and does not replace professional clinical judgment.
+        </div>
+    </div>
+</div>
+
+<script>
+    const criteria = [
+        // Clinical
+        { id: "malignancy", label: "Hematologic malignancy", category: "clinical", points: 2 },
+        { id: "dbp", label: "DBP < 60 mmHg", category: "clinical", points: 2 },
+        { id: "o2", label: "Oxygen saturation ≤ 94%", category: "clinical", points: 4 },
+        { id: "anc", label: "Absolute Neutrophil Count (ANC)", category: "clinical", type: "multi", 
+          options: [
+              { label: "≥ 0.5", points: 0 },
+              { label: "0.1 - 0.5", points: 2 },
+              { label: "< 0.1", points: 3 }
+          ]
+        },
+        // Laboratory
+        { id: "sodium", label: "Low Sodium", category: "laboratory", points: 1 },
+        { id: "calcium", label: "Low Calcium", category: "laboratory", points: 2 },
+        { id: "hemoglobin", label: "Low Hemoglobin", category: "laboratory", points: 1 },
+        { id: "creatinine", label: "Abnormal Creatinine", category: "laboratory", points: 3 },
+        { id: "glucose", label: "High Glucose", category: "laboratory", points: 1 },
+        { id: "bilirubin", label: "High Total Bilirubin", category: "laboratory", points: 3 }
+    ];
+
+    let selections = {};
+
+    function initCalculator() {
+        const clinicalContainer = document.getElementById('clinical-container');
+        const labContainer = document.getElementById('laboratory-container');
+
+        criteria.forEach(item => {
+            selections[item.id] = 0;
+
+            const row = document.createElement('div');
+            row.className = 'calc-row';
+
+            const labelDiv = document.createElement('div');
+            labelDiv.className = 'variable-label';
+            labelDiv.innerText = item.label;
+            row.appendChild(labelDiv);
+
+            const btnGroup = document.createElement('div');
+            btnGroup.className = 'button-group';
+
+            if (item.type === "multi") {
+                item.options.forEach((opt, index) => {
+                    const btn = document.createElement('button');
+                    btn.className = `btn-option ${index === 0 ? 'active' : ''}`;
+                    btn.innerText = `${opt.label} ${opt.points > 0 ? '(+' + opt.points + ')' : ''}`;
+                    btn.onclick = () => selectOption(item.id, opt.points, btnGroup, btn);
+                    btnGroup.appendChild(btn);
+                });
+            } else {
+                const btnNo = document.createElement('button');
+                btnNo.className = 'btn-option active';
+                btnNo.innerText = 'No';
+                btnNo.onclick = () => selectOption(item.id, 0, btnGroup, btnNo);
+
+                const btnYes = document.createElement('button');
+                btnYes.className = 'btn-option';
+                btnYes.innerText = `Yes (+${item.points})`;
+                btnYes.onclick = () => selectOption(item.id, item.points, btnGroup, btnYes);
+
+                btnGroup.appendChild(btnNo);
+                btnGroup.appendChild(btnYes);
+            }
+
+            row.appendChild(btnGroup);
+
+            if (item.category === 'clinical') {
+                clinicalContainer.appendChild(row);
+            } else {
+                labContainer.appendChild(row);
+            }
+        });
+        
+        updateScore();
+    }
+
+    function selectOption(id, points, groupElement, selectedBtn) {
+        selections[id] = points;
+
+        const buttons = groupElement.querySelectorAll('.btn-option');
+        buttons.forEach(btn => btn.classList.remove('active'));
+        selectedBtn.classList.add('active');
+
+        updateScore();
+    }
+
+    function updateScore() {
+        let totalScore = 0;
+        for (const key in selections) {
+            totalScore += selections[key];
+        }
+
+        document.getElementById('score-value').innerText = totalScore;
+
+        const resultBox = document.getElementById('result-box');
+        const interpretation = document.getElementById('risk-interpretation');
+        const stats = document.getElementById('risk-stats');
+
+        resultBox.style.borderColor = 'var(--border-color)';
+        interpretation.style.color = 'var(--text-main)';
+
+        const baseTitle = `<span class="risk-stats-title">Observed Adverse Outcomes</span><div class="cohort-data">`;
+        const endNote = `</div><div class="study-note">Note: These values do not predict individual future outcomes, but rather represent the range of outcomes observed during the validation studies.</div>`;
+
+        if (totalScore >= 10) {
+            interpretation.innerText = "High Risk (≥ 10 points)";
+            resultBox.style.borderColor = "var(--high-risk)";
+            interpretation.style.color = "var(--high-risk)";
+            stats.innerHTML = baseTitle + 
+                "<b>In-hospital death:</b> 6.8% - 18.5%<br>" +
+                "<b>ICU admission:</b> 23.7% - 31.8%" + endNote;
+        } else if (totalScore >= 7) {
+            interpretation.innerText = "Intermediate Risk (7-9 points)";
+            resultBox.style.borderColor = "var(--intermediate-risk)";
+            interpretation.style.color = "var(--intermediate-risk)";
+            stats.innerHTML = baseTitle + 
+                "<b>In-hospital death:</b> 2.8% - 7.2%<br>" +
+                "<b>ICU admission:</b> 8.8% - 13.5%" + endNote;
+        } else if (totalScore >= 4) {
+            interpretation.innerText = "Borderline Risk (4-6 points)";
+            resultBox.style.borderColor = "var(--borderline-risk)";
+            interpretation.style.color = "var(--borderline-risk)";
+            stats.innerHTML = baseTitle + 
+                "<b>In-hospital death:</b> 0.9% - 2.4%<br>" +
+                "<b>ICU admission:</b> 3.5% - 5.6%" + endNote;
+        } else {
+            interpretation.innerText = "Low Risk (< 4 points)";
+            resultBox.style.borderColor = "var(--low-risk)";
+            interpretation.style.color = "var(--low-risk)";
+            stats.innerHTML = baseTitle + 
+                "<b>In-hospital death:</b> 0%<br>" +
+                "<b>ICU admission:</b> 0% - 1.6%" + endNote;
+        }
+    }
+
+    function resetCalculator() {
+        for (const key in selections) {
+            selections[key] = 0;
+        }
+
+        const allGroups = document.querySelectorAll('.button-group');
+        allGroups.forEach(group => {
+            const buttons = group.querySelectorAll('.btn-option');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            buttons[0].classList.add('active');
+        });
+
+        updateScore();
+    }
+
+    window.onload = initCalculator;
+</script>
+
+</body>
+</html>
