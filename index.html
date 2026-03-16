@@ -13,7 +13,6 @@
     
     
     <head>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -103,6 +102,14 @@
         margin: 20px 0 10px 0;
         border-bottom: 2px solid var(--border-color);
         padding-bottom: 5px;
+    }
+
+    /* New style to make the laboratory variables section more prominent */
+    .lab-section-title {
+        font-size: 17px;
+        color: var(--primary-color);
+        border-bottom: 3px solid var(--primary-color);
+        margin-top: 30px;
     }
 
     .calc-row {
@@ -289,7 +296,7 @@
         <h2>SLAMD Score</h2>
         <p><span class="acronym-highlight">SL</span>o<span class="acronym-highlight">A</span>n <span class="acronym-highlight">MD</span> anderson NF* risk calculator</p>
         <div class="calc-header-desc">
-            Prognostic score for neutropenic fever presenting to the ED in cancer patients and its correlation with a composite adverse outcome.
+            Prognostic score for neutropenic fever presenting to the ED in cancer patients and its correlation with major adverse outcomes.
         </div>
     </div>
 
@@ -298,7 +305,7 @@
         <div class="section-title">Clinical Variables</div>
         <div id="clinical-container"></div>
 
-        <div class="section-title">Laboratory Variables**</div>
+        <div class="section-title lab-section-title">Laboratory Variables**</div>
         <div id="laboratory-container"></div>
 
     </div>
