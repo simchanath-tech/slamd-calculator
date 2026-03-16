@@ -104,12 +104,20 @@
         padding-bottom: 5px;
     }
 
-    /* New style to make the laboratory variables section more prominent */
+    /* Styles to make the laboratory variables section prominent with inline note */
     .lab-section-title {
         font-size: 17px;
         color: var(--primary-color);
         border-bottom: 3px solid var(--primary-color);
         margin-top: 30px;
+    }
+    
+    .lab-inline-note {
+        font-size: 11px;
+        color: #666;
+        text-transform: none;
+        font-weight: 400;
+        margin-left: 6px;
     }
 
     .calc-row {
@@ -286,6 +294,11 @@
             flex: 1 1 auto;
             width: 100%;
         }
+        .lab-inline-note {
+            display: block;
+            margin-left: 0;
+            margin-top: 4px;
+        }
     }
 </style>
 </head>
@@ -305,7 +318,9 @@
         <div class="section-title">Clinical Variables</div>
         <div id="clinical-container"></div>
 
-        <div class="section-title lab-section-title">Laboratory Variables**</div>
+        <div class="section-title lab-section-title">
+            Laboratory Variables <span class="lab-inline-note">(** High and low results represent abnormal results based on individual institution assay and institution cut-offs.)</span>
+        </div>
         <div id="laboratory-container"></div>
 
     </div>
@@ -324,8 +339,7 @@
                 </div>
                 <div class="study-note">
                     <i>Note: These values do not predict individual future outcomes, but rather represent the range of outcomes observed during the study.</i><br><br>
-                    * Neutropenic fever (NF) defined as: A reported or recorded body temperature ≥38°C during the ED presentation and an absolute neutrophil count (ANC) lower than 1000 cells/μL or, if ANC data were not available, a white blood cell count of up to 500 cells/μL upon the ED visit.<br><br>
-                    ** High and low results represent abnormal results based on individual institution assay and institution cut-offs.
+                    * Neutropenic fever (NF) defined as: A reported or recorded body temperature ≥38°C during the ED presentation and an absolute neutrophil count (ANC) lower than 1000 cells/μL or, if ANC data were not available, a white blood cell count of up to 500 cells/μL upon the ED visit.
                 </div>
             </div>
         </div>
@@ -447,7 +461,7 @@
         interpretation.style.color = 'var(--text-main)';
 
         const baseTitle = `<span class="risk-stats-title">Observed Adverse Outcomes</span><div class="cohort-data">`;
-        const endNote = `</div><div class="study-note"><i>Note: These values do not predict individual future outcomes, but rather represent the range of outcomes observed during the study.</i><br><br>* Neutropenic fever (NF) defined as: A reported or recorded body temperature ≥38°C during the ED presentation and an absolute neutrophil count (ANC) lower than 1000 cells/μL or, if ANC data were not available, a white blood cell count of up to 500 cells/μL upon the ED visit.<br><br>** High and low results represent abnormal results based on individual institution assay and institution cut-offs.</div>`;
+        const endNote = `</div><div class="study-note"><i>Note: These values do not predict individual future outcomes, but rather represent the range of outcomes observed during the study.</i><br><br>* Neutropenic fever (NF) defined as: A reported or recorded body temperature ≥38°C during the ED presentation and an absolute neutrophil count (ANC) lower than 1000 cells/μL or, if ANC data were not available, a white blood cell count of up to 500 cells/μL upon the ED visit.</div>`;
 
         if (totalScore >= 10) {
             interpretation.innerText = "High Risk (≥ 10 points)";
