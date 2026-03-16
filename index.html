@@ -309,7 +309,7 @@
         <h2>SLAMD Score</h2>
         <p><span class="acronym-highlight">SL</span>o<span class="acronym-highlight">A</span>n <span class="acronym-highlight">MD</span> anderson NF* risk calculator</p>
         <div class="calc-header-desc">
-            Prognostic score for neutropenic fever presenting to the ED in cancer patients and its correlation with major adverse outcomes.
+            Prognostic score for neutropenic fever presenting to the ED in cancer patients and its correlation with major adverse outcomes (In-hospital death or ICU admission).
         </div>
     </div>
 
@@ -332,7 +332,7 @@
             <div class="risk-interpretation" id="risk-interpretation">Low Risk</div>
             
             <div class="risk-stats" id="risk-stats">
-                <span class="risk-stats-title">Observed Adverse Outcomes</span>
+                <span class="risk-stats-title">Observed Major Adverse Outcomes</span>
                 <div class="cohort-data">
                     <b>In-hospital death:</b> 0%<br>
                     <b>ICU admission:</b> 0% - 1.6%
@@ -460,7 +460,7 @@
         resultBox.style.borderColor = 'var(--border-color)';
         interpretation.style.color = 'var(--text-main)';
 
-        const baseTitle = `<span class="risk-stats-title">Observed Adverse Outcomes</span><div class="cohort-data">`;
+        const baseTitle = `<span class="risk-stats-title">Observed Major Adverse Outcomes</span><div class="cohort-data">`;
         const endNote = `</div><div class="study-note"><i>Note: These values do not predict individual future outcomes, but rather represent the range of outcomes observed during the study.</i><br><br>* Neutropenic fever (NF) defined as: A reported or recorded body temperature ≥38°C during the ED presentation and an absolute neutrophil count (ANC) lower than 1000 cells/μL or, if ANC data were not available, a white blood cell count of up to 500 cells/μL upon the ED visit.</div>`;
 
         if (totalScore >= 10) {
