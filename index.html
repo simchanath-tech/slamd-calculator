@@ -450,7 +450,7 @@
         interpretation.style.color = 'var(--text-main)';
 
         const baseTitle = `<span class="risk-stats-title">Observed Major Adverse Outcomes</span><div class="cohort-data">`;
-        const endNote = `</div><div class="study-note">* Neutropenic fever (NF) defined as: A reported or recorded body temperature ≥38°C during the ED presentation and an absolute neutrophil count (ANC) lower than 1000 cells/μL or, if ANC data were not available, a white blood cell count of up to 500 cells/μL upon the ED visit.<br><br>** Prognostic score for neutropenic fever presenting to the ED in cancer patients and its correlation with major adverse outcomes (In-hospital death or ICU admission).<br><br><i>Note: These values do not predict individual future outcomes, but rather represent the range of outcomes observed during the study.</i></div>`;
+        const endNote = `</div><div class="study-note">* Neutropenic fever (NF) defined as: A reported or recorded body temperature ≥38°C during the ED presentation and an absolute neutrophil count (ANC) lower than 1000 cells/μL or, if ANC data were not available, a white blood cell count of up to 500 cells/μL upon the ED visit.<br><br>** Prognostic score for neutropenic fever presenting to the ED in cancer patients and its association with major adverse outcomes (In-hospital death or ICU admission).<br><br><i>Note: These values do not predict individual future outcomes, but rather represent the range of outcomes observed during the study.</i></div>`;
 
         if (totalScore >= 10) {
             interpretation.innerText = "High Risk (≥ 10 points)";
