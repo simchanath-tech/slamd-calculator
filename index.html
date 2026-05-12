@@ -1,297 +1,273 @@
 <!DOCTYPE html>
 <html lang="en">
-
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-JW8ENL1YMT"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-JW8ENL1YMT');
-</script>
-    
-    
-    <head>
-<!DOCTYPE html>
-<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SLAMD Score Calculator</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SLAMD Score Calculator</title>
 
-<style>
-    :root {
-        --primary-color: #005A9C; /* Medical Blue */
-        --bg-color: #f0f4f8;
-        --card-bg: #ffffff;
-        --border-color: #e1e4e8;
-        --text-main: #24292e;
-        --text-muted: #6a737d;
-        --low-risk: #28a745;
-        --borderline-risk: #f0ad4e;
-        --intermediate-risk: #fd7e14;
-        --high-risk: #dc3545;
-    }
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-JW8ENL1YMT"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-JW8ENL1YMT');
+    </script>
 
-    body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        background-color: var(--bg-color);
-        color: var(--text-main);
-        margin: 0;
-        padding: 20px 10px;
-        line-height: 1.5;
-    }
+    <style>
+        :root {
+            --primary-color: #005A9C; /* Medical Blue */
+            --bg-color: #f0f4f8;
+            --card-bg: #ffffff;
+            --border-color: #e1e4e8;
+            --text-main: #24292e;
+            --text-muted: #6a737d;
+            --low-risk: #28a745;
+            --borderline-risk: #f0ad4e;
+            --intermediate-risk: #fd7e14;
+            --high-risk: #dc3545;
+        }
 
-    .calculator-wrapper {
-        max-width: 600px;
-        margin: 0 auto;
-        background: var(--card-bg);
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        overflow: hidden;
-    }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px 10px;
+            line-height: 1.5;
+        }
 
-    .calc-header {
-        background-color: var(--primary-color);
-        color: white;
-        padding: 24px 20px;
-        text-align: center;
-    }
+        .calculator-wrapper {
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
 
-    .calc-header h2 {
-        margin: 0 0 8px 0;
-        font-size: 28px;
-        font-weight: 700;
-        letter-spacing: 0.5px;
-    }
+        .calc-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 24px 20px;
+            text-align: center;
+        }
 
-    .calc-header p {
-        margin: 0;
-        font-size: 15px;
-        opacity: 0.9;
-        line-height: 1.4;
-        font-weight: 400;
-    }
+        .calc-header h2 {
+            margin: 0 0 8px 0;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
 
-    .acronym-highlight {
-        font-weight: 700;
-        color: #ffffff;
-        letter-spacing: 0.5px;
-    }
+        .calc-header p {
+            margin: 0;
+            font-size: 15px;
+            opacity: 0.9;
+            line-height: 1.4;
+            font-weight: 400;
+        }
 
-    .calc-body {
-        padding: 20px;
-    }
+        .acronym-highlight {
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 0.5px;
+        }
 
-    .section-title {
-        font-size: 13px;
-        text-transform: uppercase;
-        color: var(--text-muted);
-        font-weight: 700;
-        letter-spacing: 0.5px;
-        margin: 20px 0 10px 0;
-        border-bottom: 2px solid var(--border-color);
-        padding-bottom: 5px;
-    }
+        .calc-body {
+            padding: 20px;
+        }
 
-    /* Styles to make the laboratory variables section prominent with inline note */
-    .lab-section-title {
-        font-size: 17px;
-        color: var(--primary-color);
-        border-bottom: 3px solid var(--primary-color);
-        margin-top: 30px;
-    }
-    
-    .lab-inline-note {
-        font-size: 11px;
-        color: #666;
-        text-transform: none;
-        font-weight: 400;
-        margin-left: 6px;
-    }
+        .section-title {
+            font-size: 13px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin: 20px 0 10px 0;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 5px;
+        }
 
-    .calc-row {
-        display: flex;
-        align-items: center;
-        padding: 12px 0;
-        border-bottom: 1px solid var(--border-color);
-    }
+        .lab-section-title {
+            font-size: 17px;
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+            margin-top: 30px;
+        }
 
-    .calc-row:last-child {
-        border-bottom: none;
-    }
-
-    .variable-label {
-        font-size: 15px;
-        font-weight: 500;
-        flex: 0 0 45%; /* Forces label to exactly 45% width */
-        padding-right: 15px;
-        box-sizing: border-box;
-    }
-
-    /* Segmented Control Styling */
-    .button-group {
-        display: flex;
-        flex: 0 0 55%; /* Forces buttons to align into a strict column */
-        background-color: #f1f3f5;
-        border-radius: 6px;
-        overflow: hidden;
-        border: 1px solid #ced4da;
-        box-sizing: border-box;
-    }
-
-    .btn-option {
-        flex: 1;
-        padding: 8px 12px;
-        font-size: 13px;
-        font-weight: 600;
-        color: var(--text-muted);
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        transition: all 0.2s;
-        min-width: 60px;
-        text-align: center;
-    }
-
-    .btn-option:not(:last-child) {
-        border-right: 1px solid #ced4da;
-    }
-
-    .btn-option:hover {
-        background-color: #e9ecef;
-    }
-
-    .btn-option.active {
-        background-color: var(--primary-color);
-        color: white;
-    }
-
-    /* Result Area Styling */
-    .calc-footer {
-        background-color: #f8f9fa;
-        padding: 20px;
-        border-top: 1px solid var(--border-color);
-    }
-
-    .result-box {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 15px;
-        border-radius: 8px;
-        background-color: white;
-        border: 2px solid var(--border-color);
-        margin-bottom: 15px;
-        transition: all 0.3s ease;
-    }
-
-    .score-label {
-        font-size: 14px;
-        color: var(--text-muted);
-        text-transform: uppercase;
-        font-weight: 700;
-    }
-
-    .score-value {
-        font-size: 42px;
-        font-weight: 700;
-        margin: 5px 0;
-        color: var(--text-main);
-    }
-
-    .risk-interpretation {
-        font-size: 20px;
-        font-weight: 700;
-        margin-bottom: 15px;
-    }
-
-    .risk-stats {
-        font-size: 14px;
-        color: #444;
-        background-color: #f1f3f5;
-        padding: 12px 20px;
-        border-radius: 6px;
-        text-align: center;
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-    .risk-stats-title {
-        display: block;
-        margin-bottom: 8px;
-        color: var(--text-main);
-        font-size: 13px;
-        text-transform: uppercase;
-        font-weight: 700;
-        border-bottom: 1px solid #ddd;
-        padding-bottom: 6px;
-    }
-    
-    .cohort-data {
-        text-align: center;
-        display: inline-block;
-        line-height: 1.6;
-        font-size: 14px;
-    }
-
-    .study-note {
-        font-size: 11.5px;
-        color: #666;
-        margin-top: 15px;
-        text-align: left;
-        line-height: 1.4;
-    }
-
-    .reset-btn {
-        width: 100%;
-        padding: 10px;
-        background-color: white;
-        border: 1px solid #ced4da;
-        color: var(--text-main);
-        font-size: 15px;
-        font-weight: 600;
-        border-radius: 6px;
-        cursor: pointer;
-        transition: background 0.2s;
-    }
-
-    .reset-btn:hover {
-        background-color: #e2e6ea;
-    }
-
-    .disclaimer {
-        font-size: 11px;
-        color: #888;
-        text-align: center;
-        margin-top: 20px;
-        line-height: 1.4;
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 480px) {
         .calc-row {
-            flex-direction: column;
-            align-items: flex-start;
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
         }
+
+        .calc-row:last-child {
+            border-bottom: none;
+        }
+
         .variable-label {
-            flex: 1 1 auto;
-            width: 100%;
-            margin-bottom: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            flex: 0 0 45%;
+            padding-right: 15px;
+            box-sizing: border-box;
         }
+
         .button-group {
-            flex: 1 1 auto;
+            display: flex;
+            flex: 0 0 55%;
+            background-color: #f1f3f5;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid #ced4da;
+            box-sizing: border-box;
+        }
+
+        .btn-option {
+            flex: 1;
+            padding: 8px 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .btn-option:not(:last-child) {
+            border-right: 1px solid #ced4da;
+        }
+
+        .btn-option:hover {
+            background-color: #e9ecef;
+        }
+
+        .btn-option.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .calc-footer {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .result-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: white;
+            border: 2px solid var(--border-color);
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .score-label {
+            font-size: 14px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .score-value {
+            font-size: 42px;
+            font-weight: 700;
+            margin: 5px 0;
+            color: var(--text-main);
+        }
+
+        .risk-interpretation {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .risk-stats {
+            font-size: 14px;
+            color: #444;
+            background-color: #f1f3f5;
+            padding: 12px 20px;
+            border-radius: 6px;
+            text-align: center;
             width: 100%;
+            box-sizing: border-box;
         }
-        .lab-inline-note {
+
+        .risk-stats-title {
             display: block;
-            margin-left: 0;
-            margin-top: 4px;
+            margin-bottom: 8px;
+            color: var(--text-main);
+            font-size: 13px;
+            text-transform: uppercase;
+            font-weight: 700;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 6px;
         }
-    }
-</style>
+        
+        .cohort-data {
+            text-align: center;
+            display: inline-block;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .study-note {
+            font-size: 11.5px;
+            color: #666;
+            margin-top: 15px;
+            text-align: left;
+            line-height: 1.4;
+        }
+
+        .reset-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: white;
+            border: 1px solid #ced4da;
+            color: var(--text-main);
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .reset-btn:hover {
+            background-color: #e2e6ea;
+        }
+
+        .disclaimer {
+            font-size: 11px;
+            color: #888;
+            text-align: center;
+            margin-top: 20px;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 480px) {
+            .calc-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .variable-label {
+                flex: 1 1 auto;
+                width: 100%;
+                margin-bottom: 8px;
+            }
+            .button-group {
+                flex: 1 1 auto;
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
 
@@ -304,10 +280,16 @@
     <div class="calc-body">
         
         <div class="section-title">Clinical Variables</div>
+        <div style="color: #dc3545; font-size: 11px; margin-top: -5px; margin-bottom: 10px;">
+            * clinical variables represent vital signs upon presentation
+        </div>
         <div id="clinical-container"></div>
 
         <div class="section-title lab-section-title">
-            Laboratory Variables <span class="lab-inline-note">(High and low results represent abnormal results based on individual institution assay and institution cut-offs.)</span>
+            Laboratory Variables
+        </div>
+        <div style="color: #dc3545; font-size: 11px; margin-top: -5px; margin-bottom: 10px;">
+            * High and low results represent abnormal results based on individual institution assay and institution cut-offs.
         </div>
         <div id="laboratory-container"></div>
 
@@ -387,9 +369,7 @@
             if (item.type === "multi") {
                 item.options.forEach((opt, index) => {
                     const btn = document.createElement('button');
-                    // Ensure the button corresponding to 0 points is the default active one
                     btn.className = `btn-option ${opt.points === 0 ? 'active' : ''}`;
-                    // Store the point value to easily reset it later
                     btn.dataset.points = opt.points;
                     btn.innerText = `${opt.label} ${opt.points > 0 ? '(+' + opt.points + ')' : ''}`;
                     btn.onclick = () => selectOption(item.id, opt.points, btnGroup, btn);
@@ -493,7 +473,6 @@
             const buttons = group.querySelectorAll('.btn-option');
             buttons.forEach(btn => {
                 btn.classList.remove('active');
-                // Select the button that corresponds to 0 points as the default
                 if (btn.dataset.points === "0") {
                     btn.classList.add('active');
                 }
