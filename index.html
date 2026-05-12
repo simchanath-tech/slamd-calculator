@@ -77,7 +77,6 @@
             padding: 20px;
         }
 
-        /* Unified Section Title Styling */
         .section-title {
             font-size: 15px;
             text-transform: uppercase;
@@ -87,6 +86,15 @@
             margin: 25px 0 10px 0;
             border-bottom: 2px solid var(--primary-color);
             padding-bottom: 5px;
+        }
+
+        /* New unified class for the red qualifier notes */
+        .section-note {
+            color: var(--high-risk);
+            font-size: 13px;
+            font-weight: bold;
+            margin-top: -5px;
+            margin-bottom: 12px;
         }
 
         .calc-row {
@@ -274,13 +282,13 @@
     <div class="calc-body">
         
         <div class="section-title">Clinical Variables</div>
-        <div style="color: #dc3545; font-size: 11px; margin-top: -5px; margin-bottom: 10px;">
-            * clinical variables represent vital signs upon presentation
+        <div class="section-note">
+            * Clinical variables represent vital signs upon presentation
         </div>
         <div id="clinical-container"></div>
 
         <div class="section-title">Laboratory Variables</div>
-        <div style="color: #dc3545; font-size: 11px; margin-top: -5px; margin-bottom: 10px;">
+        <div class="section-note">
             * High and low results represent abnormal results based on individual institution assay and institution cut-offs.
         </div>
         <div id="laboratory-container"></div>
